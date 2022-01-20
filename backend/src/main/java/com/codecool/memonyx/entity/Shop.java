@@ -24,5 +24,5 @@ public class Shop {
     private String name;
 
     @ManyToMany
-    private List<Product> products = new ArrayList<Product>();
+    private List<Product> products = new ArrayList<>();
 }
