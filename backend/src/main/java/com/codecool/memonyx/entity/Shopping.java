@@ -29,7 +29,7 @@ public class Shopping {
 
     @ManyToMany
     @JoinTable(name = "shopping_shops",
-            joinColumns = @JoinColumn(name = "Shopping_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "shopping_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "shops_id", referencedColumnName = "id"))
     private List<Shop> shops = new ArrayList<>();
 
