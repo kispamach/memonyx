@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "PSQL_USERNAME_MEMONYX",
+      "type": "java.lang.String",
+      "description": "Description for PSQL_USERNAME_MEMONYX."
+  }
+] }
