@@ -2,11 +2,9 @@ package com.codecool.memonyx.service;
 
 
 import com.codecool.memonyx.entity.User;
-import com.codecool.memonyx.payload.response.MessageResponse;
+import com.codecool.memonyx.payload.request.UserUpdateRequest;
 import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Service
 public class UserService {
 
@@ -27,13 +24,23 @@ public class UserService {
     }
 
     public ResponseEntity<?> findUserById(Long id) {
-        User user = userRepository.findUserById(id).orElse(null);
-        if (user == null) return ResponseEntity.badRequest().body(new MessageResponse("User not found!"));
+        User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
         return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName()));
     }
 
-    public List<UserResponse> findAllUsers() {
+    public List<UserResponse> findAllUser() {
         return this.convertToUserResponseList(userRepository.findAll());
+    }
+
+    public ResponseEntity<?> updateUser(Long id, UserUpdateRequest newUser) {
+        User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
+        if (newUser.getFirstName() != null) user.setFirstName(newUser.getFirstName());
+        if (newUser.getLastName() != null) user.setLastName(newUser.getLastName());
+        return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName()));
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     /** Converts a User into a UserResponse */
