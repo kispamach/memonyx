@@ -4,6 +4,7 @@ import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.payload.response.ShoppingResponse;
 import com.codecool.memonyx.service.ShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -19,7 +20,17 @@ public class ShoppingController {
     }
 
     @GetMapping("{id}")
-    public ShoppingResponse getShopping(@PathVariable Long id) {
-        return null;
+    public ResponseEntity<?> getShopping(@PathVariable Long id) {
+        return shoppingService.findShopping(id);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllShoping() {
+        return shoppingService.findAllShopping();
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> addShopping() {
+        return shoppingService.addShopping();
     }
 }

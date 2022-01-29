@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -26,11 +25,14 @@ public class UserService {
 
     public ResponseEntity<?> findUserById(Long id) {
         User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName()));
+        return ResponseEntity.ok(new UserResponse(user));
     }
 
-    public List<UserResponse> findAllUser() {
-        return this.convertToUserResponseList(userRepository.findAll());
+    public ResponseEntity<?> findAllUser() {
+        return ResponseEntity.ok(userRepository.findAll()
+                .stream()
+                .map(UserResponse::new)
+                .collect(Collectors.toList()));
     }
 
     @Transactional
@@ -38,7 +40,7 @@ public class UserService {
         User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
         if (newUser.getFirstName() != null) user.setFirstName(newUser.getFirstName());
         if (newUser.getLastName() != null) user.setLastName(newUser.getLastName());
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName()));
+        return ResponseEntity.ok(new UserResponse(user));
     }
 
     public void deleteUser(Long id) {
@@ -46,14 +48,14 @@ public class UserService {
     }
 
     /** Converts a User into a UserResponse */
-    private UserResponse convertToUserResponse(User user) {
-        return new UserResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+    private ResponseEntity<UserResponse> convertToUserResponse(User user) {
+        return ResponseEntity.ok(new UserResponse(user));
     }
 
-    /** Converts a list of Users into a list of UserDTOs */
-    private List<UserResponse> convertToUserResponseList(List<User> users) {
-        return users.stream()
-                .map(this::convertToUserResponse)
-                .collect(Collectors.toList());
-    }
+//    /** Converts a list of Users into a list of UserDTOs */
+//    private List<ResponseEntity<UserResponse>> convertToUserResponseList(List<User> users) {
+//        return users.stream()
+//                .map(UserResponse::new)
+//                .collect(Collectors.toList());
+//    }
 }

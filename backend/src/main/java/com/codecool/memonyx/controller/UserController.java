@@ -1,15 +1,12 @@
 package com.codecool.memonyx.controller;
 
-import com.codecool.memonyx.entity.User;
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
-import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -31,7 +28,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("")
-    public List<UserResponse> getAllUser() {
+    public ResponseEntity<?> getAllUser() {
         return userService.findAllUser();
     }
 
