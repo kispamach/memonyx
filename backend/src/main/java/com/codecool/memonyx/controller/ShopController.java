@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/shops/")
 public class ShopController {
+
     private ShopService shopService;
 
     @Autowired
