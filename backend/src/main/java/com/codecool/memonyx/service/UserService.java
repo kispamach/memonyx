@@ -3,6 +3,7 @@ package com.codecool.memonyx.service;
 
 import com.codecool.memonyx.entity.User;
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
+import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,9 @@ public class UserService {
         return ResponseEntity.ok(new UserResponse(user));
     }
 
-    public void deleteUser(Long id) {
+    public ResponseEntity<?> deleteUser(Long id) {
         userRepository.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse("Shop deleted successfully: " + id));
     }
 
     /** Converts a User into a UserResponse */
