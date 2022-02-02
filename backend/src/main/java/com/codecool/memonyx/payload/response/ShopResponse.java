@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -18,11 +19,14 @@ public class ShopResponse {
 
     private Long id;
     private String name;
-    private List<Product> products = new ArrayList<>();
+    private List<ProductResponse> products = new ArrayList<>();
 
     public ShopResponse(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();
-        this.products = shop.getProducts();
+        this.products = shop.getProducts()
+                .stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 }
