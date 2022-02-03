@@ -4,11 +4,7 @@ import com.codecool.memonyx.controller.ProductController;
 import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.payload.request.ProductRequest;
-import com.codecool.memonyx.payload.request.ShopRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
-import com.codecool.memonyx.payload.response.ProductResponse;
-import com.codecool.memonyx.payload.response.ShopResponse;
-import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 

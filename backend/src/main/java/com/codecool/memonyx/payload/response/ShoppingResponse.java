@@ -29,7 +29,7 @@ public class ShoppingResponse {
         this.date = shopping.getDate();
         this.shops = shopping.getShops()
                 .stream()
-                .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
+                .map(product -> Utils.urlCreator(ShoppingController.class, product.getId()))
                 .collect(Collectors.toList());
         this.url = Utils.urlCreator(ShoppingController.class, id);
     }

@@ -5,7 +5,6 @@ import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.entity.User;
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
-import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

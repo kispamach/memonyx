@@ -1,7 +1,6 @@
 package com.codecool.memonyx.payload.request;
 
 import com.codecool.memonyx.entity.MeasuringUnit;
-import com.codecool.memonyx.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -30,7 +30,7 @@ public class UserResponse {
         this.lastName = user.getLastName();
         this.shoppingList = user.getShoppingList()
                 .stream()
-                .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
+                .map(product -> Utils.urlCreator(UserController.class, product.getId()))
                 .collect(Collectors.toList());
         this.url = Utils.urlCreator(UserController.class, id);
     }
