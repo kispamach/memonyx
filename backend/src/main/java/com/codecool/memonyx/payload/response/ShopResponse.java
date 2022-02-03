@@ -28,7 +28,7 @@ public class ShopResponse {
         this.name = shop.getName();
         this.products = shop.getProducts()
                 .stream()
-                .map(product -> Utils.urlCreator(ShopController.class, product.getId()))
+                .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
                 .collect(Collectors.toList());
         this.url = Utils.urlCreator(ShopController.class, id);
     }

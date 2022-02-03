@@ -1,5 +1,6 @@
 package com.codecool.memonyx.payload.response;
 
+import com.codecool.memonyx.controller.ShopController;
 import com.codecool.memonyx.controller.ShoppingController;
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.util.Utils;
@@ -26,7 +27,7 @@ public class ShoppingResponse {
         this.date = shopping.getDate();
         this.shops = shopping.getShops()
                 .stream()
-                .map(product -> Utils.urlCreator(ShoppingController.class, product.getId()))
+                .map(product -> Utils.urlCreator(ShopController.class, product.getId()))
                 .collect(Collectors.toList());
         this.url = Utils.urlCreator(ShoppingController.class, id);
     }
