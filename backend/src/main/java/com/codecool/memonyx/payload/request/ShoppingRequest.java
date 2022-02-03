@@ -1,17 +1,19 @@
 package com.codecool.memonyx.payload.request;
 
-import com.codecool.memonyx.entity.Shop;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ShoppingRequest {
+
     private Long id;
     private LocalDateTime date;
-    private List<Shop> shops = new ArrayList<>();
+    private List<ShopRequest> shops;
+    private Long userId;
 }

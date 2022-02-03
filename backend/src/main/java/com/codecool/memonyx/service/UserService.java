@@ -1,6 +1,7 @@
 package com.codecool.memonyx.service;
 
 
+import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.entity.User;
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -24,40 +26,28 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<?> findUserById(Long id) {
-        User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
-        return ResponseEntity.ok(new UserResponse(user));
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
     }
 
-    public ResponseEntity<?> findAllUser() {
-        return ResponseEntity.ok(userRepository.findAll()
-                .stream()
-                .map(UserResponse::new)
-                .collect(Collectors.toList()));
+    public List<User> findAllUser() {
+        return userRepository.findAll();
     }
 
     @Transactional
-    public ResponseEntity<?> updateUser(Long id, UserUpdateRequest newUser) {
+    public User updateUser(Long id, UserUpdateRequest newUser) {
         User user = userRepository.findUserById(id).orElseThrow(() ->new UserNotFoundException(id));
         if (newUser.getFirstName() != null) user.setFirstName(newUser.getFirstName());
         if (newUser.getLastName() != null) user.setLastName(newUser.getLastName());
-        return ResponseEntity.ok(new UserResponse(user));
+        if (newUser.getShoppingRequestList() != null) user.setShoppingList(newUser.getShoppingRequestList()
+                .stream()
+                .map(Shopping::new)
+                .collect(Collectors.toList()));
+        return user;
     }
 
     public ResponseEntity<?> deleteUser(Long id) {
         userRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Shop deleted successfully: " + id));
     }
-
-    /** Converts a User into a UserResponse */
-    private ResponseEntity<UserResponse> convertToUserResponse(User user) {
-        return ResponseEntity.ok(new UserResponse(user));
-    }
-
-//    /** Converts a list of Users into a list of UserDTOs */
-//    private List<ResponseEntity<UserResponse>> convertToUserResponseList(List<User> users) {
-//        return users.stream()
-//                .map(UserResponse::new)
-//                .collect(Collectors.toList());
-//    }
 }

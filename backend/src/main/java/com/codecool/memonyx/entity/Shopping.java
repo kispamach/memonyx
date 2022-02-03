@@ -1,5 +1,6 @@
 package com.codecool.memonyx.entity;
 
+import com.codecool.memonyx.payload.request.ShoppingRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,4 +35,11 @@ public class Shopping {
             inverseJoinColumns = @JoinColumn(name = "shops_id", referencedColumnName = "id"))
     private List<Shop> shops = new ArrayList<>();
 
+    public Shopping(ShoppingRequest shoppingRequest) {
+        this.setDate(shoppingRequest.getDate());
+        this.setShops(shoppingRequest.getShops()
+                .stream()
+                .map(Shop::new)
+                .collect(Collectors.toList()));
+    }
 }

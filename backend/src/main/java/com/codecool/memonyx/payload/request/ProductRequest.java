@@ -15,11 +15,5 @@ public class ProductRequest {
     private String name;
     private Float quantity;
     private MeasuringUnit measuringUnit;
-
-    public ProductRequest(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.quantity = product.getQuantity();
-        this.measuringUnit = product.getMeasuringUnit();
-    }
+    private Long shopId;
 }

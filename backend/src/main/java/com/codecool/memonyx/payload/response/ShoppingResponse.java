@@ -1,7 +1,11 @@
 package com.codecool.memonyx.payload.response;
 
+import com.codecool.memonyx.controller.ProductController;
+import com.codecool.memonyx.controller.ShopController;
+import com.codecool.memonyx.controller.ShoppingController;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
+import com.codecool.memonyx.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,14 +21,16 @@ public class ShoppingResponse {
 
     private Long id;
     private LocalDateTime date;
-    private List<ShopResponse> shopList;
+    private List<String> shops;
+    private String url;
 
     public ShoppingResponse(Shopping shopping) {
         this.id = shopping.getId();
         this.date = shopping.getDate();
-        this.shopList = shopping.getShops()
+        this.shops = shopping.getShops()
                 .stream()
-                .map(ShopResponse::new)
+                .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
                 .collect(Collectors.toList());
+        this.url = Utils.urlCreator(ShoppingController.class, id);
     }
 }

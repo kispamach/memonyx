@@ -1,5 +1,6 @@
 package com.codecool.memonyx.entity;
 
+import com.codecool.memonyx.payload.request.ProductRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,9 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private MeasuringUnit measuringUnit;
 
+    public Product(ProductRequest productRequest) {
+        this.setName(productRequest.getName());
+        this.setQuantity(productRequest.getQuantity());
+        this.setMeasuringUnit(productRequest.getMeasuringUnit());
+    }
 }
