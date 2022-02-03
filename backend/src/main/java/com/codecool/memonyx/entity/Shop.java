@@ -26,7 +26,10 @@ public class Shop {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "shops_products",
+            joinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "products_id", referencedColumnName = "id"))
     private List<Product> products = new ArrayList<>();
 
 

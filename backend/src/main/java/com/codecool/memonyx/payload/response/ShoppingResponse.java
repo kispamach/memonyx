@@ -1,9 +1,6 @@
 package com.codecool.memonyx.payload.response;
 
-import com.codecool.memonyx.controller.ProductController;
-import com.codecool.memonyx.controller.ShopController;
 import com.codecool.memonyx.controller.ShoppingController;
-import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.util.Utils;
 import lombok.AllArgsConstructor;

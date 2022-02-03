@@ -29,7 +29,7 @@ public class Shopping {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "shopping_shops",
             joinColumns = @JoinColumn(name = "shopping_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "shops_id", referencedColumnName = "id"))

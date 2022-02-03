@@ -56,10 +56,4 @@ public class ShopController {
     public ResponseEntity<?> deleteShop(@PathVariable Long id) {
         return shopService.deleteShop(id);
     }
-
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PutMapping("{id}/add-product")
-    public ResponseEntity<?> addProduct(@PathVariable Long id, @RequestBody ProductRequest product) {
-        return null;
-    }
 }

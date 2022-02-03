@@ -37,12 +37,12 @@ public class User {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime registered;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "users_roles",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles = new HashSet<>();
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private Set<Role> roles = new java.util.LinkedHashSet<>();
 
     @Column(name = "shopping_list")
     @OneToMany
