@@ -3,24 +3,21 @@ package com.codecool.memonyx.controller;
 import com.codecool.memonyx.payload.request.ProductRequest;
 import com.codecool.memonyx.payload.response.ProductResponse;
 import com.codecool.memonyx.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/products/")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")

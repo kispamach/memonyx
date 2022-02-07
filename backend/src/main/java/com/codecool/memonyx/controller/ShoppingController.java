@@ -3,24 +3,21 @@ package com.codecool.memonyx.controller;
 import com.codecool.memonyx.payload.request.ShoppingRequest;
 import com.codecool.memonyx.payload.response.ShoppingResponse;
 import com.codecool.memonyx.service.ShoppingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/shopping/")
 public class ShoppingController {
 
-    private ShoppingService shoppingService;
+    private final ShoppingService shoppingService;
 
-    @Autowired
-    public void setShoppingService(ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
-    }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")

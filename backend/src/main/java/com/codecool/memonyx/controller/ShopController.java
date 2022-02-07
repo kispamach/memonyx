@@ -1,28 +1,23 @@
 package com.codecool.memonyx.controller;
 
-import com.codecool.memonyx.payload.request.ProductRequest;
 import com.codecool.memonyx.payload.request.ShopRequest;
-import com.codecool.memonyx.payload.request.UserUpdateRequest;
 import com.codecool.memonyx.payload.response.ShopResponse;
 import com.codecool.memonyx.service.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/shops/")
 public class ShopController {
 
-    private ShopService shopService;
+    private final ShopService shopService;
 
-    @Autowired
-    public void setShopService(ShopService shopService) {
-        this.shopService = shopService;
-    }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
