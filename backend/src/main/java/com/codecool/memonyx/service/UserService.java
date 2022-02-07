@@ -3,6 +3,7 @@ package com.codecool.memonyx.service;
 
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.entity.User;
+import com.codecool.memonyx.exception.UserNotFoundException;
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.repository.UserRepository;

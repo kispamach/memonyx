@@ -1,4 +1,4 @@
-package com.codecool.memonyx.service;
+package com.codecool.memonyx.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class ShoppingNotFoundAdvice {
+public class ProductNotFoundAdvice {
     @ResponseBody
-    @ExceptionHandler(ShoppingNotFoundException.class)
+    @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String shoppingNotFoundHandler(ShoppingNotFoundException ex) {
+    String productNotFoundHandler(ProductNotFoundException ex) {
         return ex.getMessage();
     }
 }

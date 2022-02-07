@@ -7,6 +7,7 @@ import java.net.URL;
 
 public class Utils {
 
+    /** Generate url with controller class and id */
     public static String urlCreator(Class controller, Long id) {
         try {
             URL myURL = new URL("http://localhost:8080/");

@@ -1,4 +1,4 @@
-package com.codecool.memonyx.service;
+package com.codecool.memonyx.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

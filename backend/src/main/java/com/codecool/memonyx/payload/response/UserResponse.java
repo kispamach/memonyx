@@ -1,6 +1,5 @@
 package com.codecool.memonyx.payload.response;
 
-import com.codecool.memonyx.controller.ProductController;
 import com.codecool.memonyx.controller.ShoppingController;
 import com.codecool.memonyx.controller.UserController;
 import com.codecool.memonyx.entity.User;

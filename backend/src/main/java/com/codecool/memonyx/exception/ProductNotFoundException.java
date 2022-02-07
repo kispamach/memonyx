@@ -1,4 +1,4 @@
-package com.codecool.memonyx.service;
+package com.codecool.memonyx.exception;
 
 public class ProductNotFoundException extends RuntimeException{
 

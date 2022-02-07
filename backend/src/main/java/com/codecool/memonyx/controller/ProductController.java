@@ -1,6 +1,5 @@
 package com.codecool.memonyx.controller;
 
-import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.payload.request.ProductRequest;
 import com.codecool.memonyx.payload.response.ProductResponse;
 import com.codecool.memonyx.service.ProductService;
@@ -26,8 +25,7 @@ public class ProductController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        Product product = productService.findProduct(id);
-        return ResponseEntity.ok(new ProductResponse(product));
+        return ResponseEntity.ok(new ProductResponse(productService.findProduct(id)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

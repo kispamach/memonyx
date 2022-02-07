@@ -4,6 +4,7 @@ package com.codecool.memonyx.service;
 import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
+import com.codecool.memonyx.exception.ShopNotFoundException;
 import com.codecool.memonyx.payload.request.ShopRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.repository.ShopRepository;

@@ -1,22 +1,19 @@
 package com.codecool.memonyx.service;
 
-import com.codecool.memonyx.controller.ProductController;
 import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
+import com.codecool.memonyx.exception.ProductNotFoundException;
 import com.codecool.memonyx.payload.request.ProductRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,8 +44,12 @@ public class ProductService {
 
     @Transactional
     public Product addProduct(ProductRequest newProduct) {
-        if (productRepository.existsByNameAndQuantityAndMeasuringUnit(newProduct.getName(), newProduct.getQuantity(), newProduct.getMeasuringUnit())) {
-            Product product = productRepository.findProductByNameAndQuantityAndMeasuringUnit(newProduct.getName(), newProduct.getQuantity(), newProduct.getMeasuringUnit())
+        if (productRepository.existsByNameAndQuantityAndMeasuringUnit(newProduct.getName(),
+                newProduct.getQuantity(),
+                newProduct.getMeasuringUnit())) {
+            Product product = productRepository.findProductByNameAndQuantityAndMeasuringUnit(newProduct.getName(),
+                            newProduct.getQuantity(),
+                            newProduct.getMeasuringUnit())
                     .orElse(null);
 
             // Add product to shop's product list
@@ -78,12 +79,6 @@ public class ProductService {
     public ResponseEntity<?> deleteProduct(Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Product deleted successfully: " + id));
-    }
-
-    private List<Link> productURLs(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        Link selfLink = linkTo(ProductController.class).slash(product.getId()).withSelfRel();
-        return null;
     }
 
     /** Add product to shop's product list */
