@@ -10,10 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ShoppingRequest {
-
+public class CartRequest {
     private Long id;
     private LocalDateTime date;
-    private List<CartRequest> carts;
-    private Long userId;
+    private ShopRequest shop;
+    private List<ProductRequest> productIds;
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -13,6 +12,5 @@ public class ShopRequest {
 
     private Long id;
     private String name;
-    private List<ProductRequest> products;
-    private Long shoppingId;
+    private Long cartId;
 }

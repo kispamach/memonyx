@@ -14,5 +14,5 @@ public class ProductRequest {
     private String name;
     private Float quantity;
     private MeasuringUnit measuringUnit;
-    private Long shopId;
+    private Long cartId;
 }

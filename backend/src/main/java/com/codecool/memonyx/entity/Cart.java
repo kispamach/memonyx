@@ -1,5 +1,6 @@
 package com.codecool.memonyx.entity;
 
+import com.codecool.memonyx.payload.request.CartRequest;
 import com.codecool.memonyx.payload.request.ShoppingRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +18,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "shopping")
-public class Shopping {
-
+@Table(name = "carts")
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,17 +28,23 @@ public class Shopping {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "shopping_carts",
-            joinColumns = @JoinColumn(name = "shopping_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "carts_id", referencedColumnName = "id"))
-    private List<Cart> carts = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
-    public Shopping(ShoppingRequest shoppingRequest) {
-        this.setDate(shoppingRequest.getDate());
-        this.setCarts(shoppingRequest.getCarts()
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "carts_products",
+            joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
+    private List<Product> products;
+
+
+    public Cart(CartRequest cartRequest) {
+        this.setDate(cartRequest.getDate());
+        this.setShop(new Shop(cartRequest.getShop()));
+        this.setProducts(cartRequest.getProductIds()
                 .stream()
-                .map(Cart::new)
+                .map(Product::new)
                 .collect(Collectors.toList()));
     }
 }
