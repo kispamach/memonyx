@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Optional<Product> findProductByName(String name);
+    Optional<Product> findProductByNameIgnoreCase(String name);
 
-    boolean existsByNameAndQuantityAndMeasuringUnit(String name, Float quantity, MeasuringUnit measuringUnit);
+    boolean existsByNameIgnoreCaseAndQuantityAndMeasuringUnit(String name, Float quantity, MeasuringUnit measuringUnit);
 
-    Optional<Product> findProductByNameAndQuantityAndMeasuringUnit(String name, Float quantity, MeasuringUnit measuringUnit);
+    Optional<Product> findProductByNameIgnoreCaseAndQuantityAndMeasuringUnit(String name, Float quantity, MeasuringUnit measuringUnit);
 }

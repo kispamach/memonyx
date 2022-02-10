@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +29,13 @@ public class CartResponse {
     public CartResponse(Cart cart) {
         this.id = cart.getId();
         this.date = cart.getDate();
-        this.shop = Utils.urlCreator(ShopController.class, cart.getShop().getId());
+        this.shop = cart.getShop() == null
+                ? null
+                : Utils.urlCreator(ShopController.class, cart.getShop().getId());
         this.products = cart.getProducts()
-                .stream()
-                .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(product -> Utils.urlCreator(ProductController.class, product.getId()))
+                    .collect(Collectors.toList());
         this.url = Utils.urlCreator(CartController.class, id);
     }
 }

@@ -1,6 +1,7 @@
 package com.codecool.memonyx.service;
 
 import com.codecool.memonyx.entity.Cart;
+import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.exception.CartNotFoundException;
@@ -21,17 +22,11 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private CartRepository cartRepository;
-    private ProductService productService;
     private ShoppingService shoppingService;
 
     @Autowired
     public void setCartRepository(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
-    }
-
-    @Autowired
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
     }
 
     @Autowired
@@ -50,12 +45,7 @@ public class CartService {
     @Transactional
     public Cart addCart(CartRequest newCart) {
         Cart cart = new Cart();
-        cart.setShop(new Shop(newCart.getShop()));
         cart.setDate(LocalDateTime.now());
-        if (newCart.getProductIds() != null) cart.setProducts(newCart.getProductIds()
-                .stream()
-                .map(product -> productService.findProduct(product.getId()))
-                .collect(Collectors.toList()));
 
         // Add cart to shopping's cart list
         Shopping shopping = shoppingService.findShopping(newCart.getShoppingId());
@@ -71,9 +61,9 @@ public class CartService {
         Cart cart = findCartById(id);
 
         if (newCart.getShop() != null) cart.setShop(new Shop(newCart.getShop()));
-        if (newCart.getProductIds() != null) cart.setProducts(newCart.getProductIds()
+        if (newCart.getProducts() != null) cart.setProducts(newCart.getProducts()
                 .stream()
-                .map(product -> productService.findProduct(product.getId()))
+                .map(Product::new)
                 .collect(Collectors.toList()));
 
         return cart;
