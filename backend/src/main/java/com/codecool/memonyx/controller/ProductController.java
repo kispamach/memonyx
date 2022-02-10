@@ -37,7 +37,6 @@ public class ProductController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addProduct(@RequestBody ProductRequest product) {
-        System.out.println(product.getShopId());
         return ResponseEntity.ok(new ProductResponse(productService.addProduct(product)));
     }
 

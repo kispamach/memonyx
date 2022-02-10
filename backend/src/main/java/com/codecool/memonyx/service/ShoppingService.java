@@ -1,6 +1,7 @@
 package com.codecool.memonyx.service;
 
 
+import com.codecool.memonyx.entity.Cart;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.entity.User;
@@ -57,10 +58,10 @@ public class ShoppingService {
 
     @Transactional
     public Shopping updateShopping(Long id, ShoppingRequest newShopping) {
-        Shopping shopping = shoppingRepository.findShoppingById(id).orElseThrow(() -> new ShoppingNotFoundException(id));
-        if (newShopping.getShops() != null) shopping.setShops(newShopping.getShops()
+        Shopping shopping = findShopping(id);
+        if (newShopping.getCarts() != null) shopping.setCarts(newShopping.getCarts()
                 .stream()
-                .map(Shop::new)
+                .map(Cart::new)
                 .collect(Collectors.toList()));
         return shopping;
     }

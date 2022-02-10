@@ -1,6 +1,7 @@
 package com.codecool.memonyx.service;
 
 
+import com.codecool.memonyx.entity.Cart;
 import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private ShopRepository shopRepository;
-    private ShoppingService shoppingService;
+    private CartService cartService;
 
     @Autowired
     public void setShopRepository(ShopRepository shopRepository) {
@@ -32,8 +33,8 @@ public class ShopService {
     }
 
     @Autowired
-    public void setShoppingService(ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
     }
 
     public Shop findShop(Long id) {
@@ -49,11 +50,9 @@ public class ShopService {
         Shop shop = new Shop();
         shop.setName(newShop.getName());
 
-        // Add shop to shopping
-        Shopping shopping = shoppingService.findShopping(newShop.getShoppingId());
-        List<Shop> shopList = shopping.getShops();
-        shopList.add(shop);
-        shopping.setShops(shopList);
+        // Add shop to cart
+        Cart cart = cartService.findCartById(newShop.getCartId());
+        cart.setShop(shop);
         return shopRepository.save(shop);
     }
 
@@ -61,10 +60,6 @@ public class ShopService {
     public Shop updateShop(Long id, ShopRequest newShop) {
         Shop shop = shopRepository.findShopById(id).orElseThrow(() -> new ShopNotFoundException(id));
         if (newShop.getName() != null) shop.setName(newShop.getName());
-        if (newShop.getProducts() != null) shop.setProducts(newShop.getProducts()
-                .stream()
-                .map(Product::new)
-                .collect(Collectors.toList()));
         return shop;
     }
 

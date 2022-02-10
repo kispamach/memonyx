@@ -15,4 +15,5 @@ public class CartRequest {
     private LocalDateTime date;
     private ShopRequest shop;
     private List<ProductRequest> productIds;
+    private Long shoppingId;
 }

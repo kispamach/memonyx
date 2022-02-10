@@ -8,6 +8,7 @@ import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,23 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Service
 public class ProductService {
 
     private ProductRepository productRepository;
-    private ShopService shopService;
 
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    @Autowired
-    public void setShopService(ShopService shopService) {
-        this.shopService = shopService;
-    }
 
     public Product findProduct(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
