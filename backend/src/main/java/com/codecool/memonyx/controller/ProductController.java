@@ -1,7 +1,6 @@
 package com.codecool.memonyx.controller;
 
 import com.codecool.memonyx.payload.request.ProductRequest;
-import com.codecool.memonyx.payload.response.ProductResponse;
 import com.codecool.memonyx.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class ProductController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ProductResponse(productService.findProduct(id)));
+        return ResponseEntity.ok(productService.productConvertToProductResponse(productService.findProduct(id)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -30,21 +29,20 @@ public class ProductController {
     public ResponseEntity<?> getAllProducts() {
         return ResponseEntity.ok(productService.findAllProduct()
                 .stream()
-                .map(ProductResponse::new)
+                .map(productService::productConvertToProductResponse)
                 .collect(Collectors.toList()));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addProduct(@RequestBody ProductRequest product) {
-        System.out.println(product.getShopId());
-        return ResponseEntity.ok(new ProductResponse(productService.addProduct(product)));
+        return ResponseEntity.ok(productService.productConvertToProductResponse(productService.addProduct(product)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateProduct(@RequestBody ProductRequest newProduct, @PathVariable Long id) {
-        return ResponseEntity.ok(new ProductResponse(productService.updateProduct(id, newProduct)));
+        return ResponseEntity.ok(productService.productConvertToProductResponse(productService.updateProduct(id, newProduct)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

@@ -1,7 +1,6 @@
 package com.codecool.memonyx.controller;
 
 import com.codecool.memonyx.payload.request.UserUpdateRequest;
-import com.codecool.memonyx.payload.response.UserResponse;
 import com.codecool.memonyx.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(new UserResponse(userService.findUserById(id)));
+        return ResponseEntity.ok(userService.userConvertToUserResponse(userService.findUserById(id)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -30,14 +29,14 @@ public class UserController {
     public ResponseEntity<?> getAllUser() {
         return ResponseEntity.ok(userService.findAllUser()
                 .stream()
-                .map(UserResponse::new)
+                .map(userService::userConvertToUserResponse)
                 .collect(Collectors.toList()));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> update(@RequestBody UserUpdateRequest newUser, @PathVariable Long id){
-        return ResponseEntity.ok(new UserResponse(userService.updateUser(id, newUser)));
+        return ResponseEntity.ok(userService.userConvertToUserResponse(userService.updateUser(id, newUser)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

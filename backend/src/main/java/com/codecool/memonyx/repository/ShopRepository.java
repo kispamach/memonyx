@@ -10,4 +10,8 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
     Optional<Shop> findShopById(Long id);
 
+    boolean existsByNameIgnoreCase(String name);
+
+    Optional<Shop> findShopByNameIgnoreCase(String name);
+
 }

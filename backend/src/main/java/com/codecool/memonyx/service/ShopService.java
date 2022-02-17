@@ -1,13 +1,14 @@
 package com.codecool.memonyx.service;
 
-
-import com.codecool.memonyx.entity.Product;
+import com.codecool.memonyx.controller.ShopController;
+import com.codecool.memonyx.entity.Cart;
 import com.codecool.memonyx.entity.Shop;
-import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.exception.ShopNotFoundException;
 import com.codecool.memonyx.payload.request.ShopRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
+import com.codecool.memonyx.payload.response.ShopResponse;
 import com.codecool.memonyx.repository.ShopRepository;
+import com.codecool.memonyx.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private ShopRepository shopRepository;
-    private ShoppingService shoppingService;
+    private CartService cartService;
+    private Utils utils;
 
     @Autowired
     public void setShopRepository(ShopRepository shopRepository) {
@@ -32,8 +33,13 @@ public class ShopService {
     }
 
     @Autowired
-    public void setShoppingService(ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    @Autowired
+    public void setUtils(Utils utils) {
+        this.utils = utils;
     }
 
     public Shop findShop(Long id) {
@@ -46,30 +52,39 @@ public class ShopService {
 
     @Transactional
     public Shop addShop(ShopRequest newShop) {
+        Cart cart = cartService.findCartById(newShop.getCartId());
+        //Checks the existence of the shop
+        if (shopRepository.existsByNameIgnoreCase(newShop.getName())) {
+            Shop shop = shopRepository.findShopByNameIgnoreCase(newShop.getName()).orElse(null);
+            cart.setShop(shop);
+            return shop;
+        }
+
         Shop shop = new Shop();
         shop.setName(newShop.getName());
 
-        // Add shop to shopping
-        Shopping shopping = shoppingService.findShopping(newShop.getShoppingId());
-        List<Shop> shopList = shopping.getShops();
-        shopList.add(shop);
-        shopping.setShops(shopList);
+        // Add shop to cart
+        cart.setShop(shop);
         return shopRepository.save(shop);
     }
 
     @Transactional
     public Shop updateShop(Long id, ShopRequest newShop) {
-        Shop shop = shopRepository.findShopById(id).orElseThrow(() -> new ShopNotFoundException(id));
+        Shop shop = findShop(id);
         if (newShop.getName() != null) shop.setName(newShop.getName());
-        if (newShop.getProducts() != null) shop.setProducts(newShop.getProducts()
-                .stream()
-                .map(Product::new)
-                .collect(Collectors.toList()));
         return shop;
     }
 
     public ResponseEntity<?> deleteShop(Long id) {
         shopRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Shop deleted successfully: " + id));
+    }
+
+    public ShopResponse shopConvertToShopResponse(Shop shop) {
+        return new ShopResponse(
+                shop.getId(),
+                shop.getName(),
+                utils.urlCreator(ShopController.class, shop.getId())
+        );
     }
 }

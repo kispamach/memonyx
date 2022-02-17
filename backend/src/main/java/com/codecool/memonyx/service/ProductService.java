@@ -1,13 +1,14 @@
 package com.codecool.memonyx.service;
 
+import com.codecool.memonyx.controller.ProductController;
+import com.codecool.memonyx.entity.Cart;
 import com.codecool.memonyx.entity.Product;
-import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.exception.ProductNotFoundException;
 import com.codecool.memonyx.payload.request.ProductRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
+import com.codecool.memonyx.payload.response.ProductResponse;
 import com.codecool.memonyx.repository.ProductRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.codecool.memonyx.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Service
 public class ProductService {
 
     private ProductRepository productRepository;
-    private ShopService shopService;
+    private CartService cartService;
+    private Utils utils;
 
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
@@ -29,8 +30,13 @@ public class ProductService {
     }
 
     @Autowired
-    public void setShopService(ShopService shopService) {
-        this.shopService = shopService;
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    @Autowired
+    public void setUtils(Utils utils) {
+        this.utils = utils;
     }
 
     public Product findProduct(Long id) {
@@ -44,16 +50,18 @@ public class ProductService {
 
     @Transactional
     public Product addProduct(ProductRequest newProduct) {
-        if (productRepository.existsByNameAndQuantityAndMeasuringUnit(newProduct.getName(),
+        //Checks the existence of the product
+        if (productRepository.existsByNameIgnoreCaseAndQuantityAndMeasuringUnit(newProduct.getName(),
                 newProduct.getQuantity(),
                 newProduct.getMeasuringUnit())) {
-            Product product = productRepository.findProductByNameAndQuantityAndMeasuringUnit(newProduct.getName(),
+            Product product = productRepository.findProductByNameIgnoreCaseAndQuantityAndMeasuringUnit(
+                            newProduct.getName(),
                             newProduct.getQuantity(),
                             newProduct.getMeasuringUnit())
                     .orElse(null);
 
-            // Add product to shop's product list
-            addProductToShop(product, newProduct.getShopId());
+            // Add product to cart's product list
+            addProductToCart(product, newProduct.getCartId());
             return product;
         }
         Product product = new Product();
@@ -61,8 +69,8 @@ public class ProductService {
         product.setQuantity(newProduct.getQuantity());
         product.setMeasuringUnit(newProduct.getMeasuringUnit());
 
-        // Add product to shop's product list
-        addProductToShop(product, newProduct.getShopId());
+        // Add product to cart's product list
+        addProductToCart(product, newProduct.getCartId());
 
         return productRepository.save(product);
     }
@@ -82,11 +90,20 @@ public class ProductService {
     }
 
     /** Add product to shop's product list */
-    private void addProductToShop(Product product, Long shopId) {
-        Shop shop = shopService.findShop(shopId);
-        System.out.println(shop.getName());
-        List<Product> shopProducts = shop.getProducts();
-        shopProducts.add(product);
-        shop.setProducts(shopProducts);
+    private void addProductToCart(Product product, Long cartId) {
+        Cart cart = cartService.findCartById(cartId);
+        List<Product> cartProducts = cart.getProducts();
+        cartProducts.add(product);
+        cart.setProducts(cartProducts);
+    }
+
+    public ProductResponse productConvertToProductResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getQuantity(),
+                product.getMeasuringUnit(),
+                utils.urlCreator(ProductController.class, product.getId())
+        );
     }
 }

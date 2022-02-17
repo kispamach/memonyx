@@ -1,7 +1,6 @@
 package com.codecool.memonyx.controller;
 
 import com.codecool.memonyx.payload.request.ShopRequest;
-import com.codecool.memonyx.payload.response.ShopResponse;
 import com.codecool.memonyx.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class ShopController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<?> getShop(@PathVariable Long id) {
-        return ResponseEntity.ok(new ShopResponse(shopService.findShop(id)));
+        return ResponseEntity.ok(shopService.shopConvertToShopResponse(shopService.findShop(id)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -30,20 +29,20 @@ public class ShopController {
     public ResponseEntity<?> getAllShop() {
         return ResponseEntity.ok(shopService.findAllShop()
                 .stream()
-                .map(ShopResponse::new)
+                .map(shopService::shopConvertToShopResponse)
                 .collect(Collectors.toList()));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addShop(@RequestBody ShopRequest newShop) {
-        return ResponseEntity.ok(new ShopResponse(shopService.addShop(newShop)));
+        return ResponseEntity.ok(shopService.shopConvertToShopResponse(shopService.addShop(newShop)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateShop(@RequestBody ShopRequest newShop, @PathVariable Long id){
-        return ResponseEntity.ok(new ShopResponse(shopService.updateShop(id, newShop)));
+        return ResponseEntity.ok(shopService.shopConvertToShopResponse(shopService.updateShop(id, newShop)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

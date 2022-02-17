@@ -1,7 +1,6 @@
 package com.codecool.memonyx.entity;
 
 import com.codecool.memonyx.payload.request.CartRequest;
-import com.codecool.memonyx.payload.request.ShoppingRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +36,13 @@ public class Cart {
     @JoinTable(name = "carts_products",
             joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
 
     public Cart(CartRequest cartRequest) {
         this.setDate(cartRequest.getDate());
         this.setShop(new Shop(cartRequest.getShop()));
-        this.setProducts(cartRequest.getProductIds()
+        this.setProducts(cartRequest.getProducts()
                 .stream()
                 .map(Product::new)
                 .collect(Collectors.toList()));
