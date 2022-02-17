@@ -1,9 +1,6 @@
 package com.codecool.memonyx.controller;
 
 import com.codecool.memonyx.payload.request.CartRequest;
-import com.codecool.memonyx.payload.request.ProductRequest;
-import com.codecool.memonyx.payload.response.CartResponse;
-import com.codecool.memonyx.payload.response.ProductResponse;
 import com.codecool.memonyx.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,7 @@ public class CartController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(new CartResponse(cartService.findCartById(id)));
+        return ResponseEntity.ok(cartService.cartConvertToCartResponse(cartService.findCartById(id)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -31,20 +28,20 @@ public class CartController {
     public ResponseEntity<?> getAllProducts() {
         return ResponseEntity.ok(cartService.findAllCart()
                 .stream()
-                .map(CartResponse::new)
+                .map(cartService::cartConvertToCartResponse)
                 .collect(Collectors.toList()));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addProduct(@RequestBody CartRequest cart) {
-        return ResponseEntity.ok(new CartResponse(cartService.addCart(cart)));
+        return ResponseEntity.ok(cartService.cartConvertToCartResponse(cartService.addCart(cart)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateProduct(@RequestBody CartRequest newCart, @PathVariable Long id) {
-        return ResponseEntity.ok(new CartResponse(cartService.updateCart(id, newCart)));
+        return ResponseEntity.ok(cartService.cartConvertToCartResponse(cartService.updateCart(id, newCart)));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

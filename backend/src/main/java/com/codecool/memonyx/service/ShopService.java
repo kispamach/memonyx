@@ -1,13 +1,14 @@
 package com.codecool.memonyx.service;
 
-
+import com.codecool.memonyx.controller.ShopController;
 import com.codecool.memonyx.entity.Cart;
-import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.exception.ShopNotFoundException;
 import com.codecool.memonyx.payload.request.ShopRequest;
 import com.codecool.memonyx.payload.response.MessageResponse;
+import com.codecool.memonyx.payload.response.ShopResponse;
 import com.codecool.memonyx.repository.ShopRepository;
+import com.codecool.memonyx.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class ShopService {
 
     private ShopRepository shopRepository;
     private CartService cartService;
+    private Utils utils;
 
     @Autowired
     public void setShopRepository(ShopRepository shopRepository) {
@@ -33,6 +35,11 @@ public class ShopService {
     @Autowired
     public void setCartService(CartService cartService) {
         this.cartService = cartService;
+    }
+
+    @Autowired
+    public void setUtils(Utils utils) {
+        this.utils = utils;
     }
 
     public Shop findShop(Long id) {
@@ -45,9 +52,11 @@ public class ShopService {
 
     @Transactional
     public Shop addShop(ShopRequest newShop) {
+        Cart cart = cartService.findCartById(newShop.getCartId());
         //Checks the existence of the shop
         if (shopRepository.existsByNameIgnoreCase(newShop.getName())) {
             Shop shop = shopRepository.findShopByNameIgnoreCase(newShop.getName()).orElse(null);
+            cart.setShop(shop);
             return shop;
         }
 
@@ -55,7 +64,6 @@ public class ShopService {
         shop.setName(newShop.getName());
 
         // Add shop to cart
-        Cart cart = cartService.findCartById(newShop.getCartId());
         cart.setShop(shop);
         return shopRepository.save(shop);
     }
@@ -70,5 +78,13 @@ public class ShopService {
     public ResponseEntity<?> deleteShop(Long id) {
         shopRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Shop deleted successfully: " + id));
+    }
+
+    public ShopResponse shopConvertToShopResponse(Shop shop) {
+        return new ShopResponse(
+                shop.getId(),
+                shop.getName(),
+                utils.urlCreator(ShopController.class, shop.getId())
+        );
     }
 }

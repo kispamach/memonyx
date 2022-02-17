@@ -1,13 +1,18 @@
 package com.codecool.memonyx.service;
 
+import com.codecool.memonyx.controller.CartController;
+import com.codecool.memonyx.controller.ProductController;
+import com.codecool.memonyx.controller.ShopController;
 import com.codecool.memonyx.entity.Cart;
 import com.codecool.memonyx.entity.Product;
 import com.codecool.memonyx.entity.Shop;
 import com.codecool.memonyx.entity.Shopping;
 import com.codecool.memonyx.exception.CartNotFoundException;
 import com.codecool.memonyx.payload.request.CartRequest;
+import com.codecool.memonyx.payload.response.CartResponse;
 import com.codecool.memonyx.payload.response.MessageResponse;
 import com.codecool.memonyx.repository.CartRepository;
+import com.codecool.memonyx.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +28,7 @@ public class CartService {
 
     private CartRepository cartRepository;
     private ShoppingService shoppingService;
+    private Utils utils;
 
     @Autowired
     public void setCartRepository(CartRepository cartRepository) {
@@ -32,6 +38,11 @@ public class CartService {
     @Autowired
     public void setShoppingService(ShoppingService shoppingService) {
         this.shoppingService = shoppingService;
+    }
+
+    @Autowired
+    public void setUtils(Utils utils) {
+        this.utils = utils;
     }
 
     public Cart findCartById(Long id) {
@@ -72,5 +83,18 @@ public class CartService {
     public ResponseEntity<?> deleteCart(Long id) {
         cartRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Cart deleted successfully: " + id));
+    }
+
+    public CartResponse cartConvertToCartResponse(Cart cart) {
+        return new CartResponse(cart.getId(),
+                cart.getDate(),
+                cart.getShop() == null
+                        ? null
+                        : utils.urlCreator(ShopController.class, cart.getShop().getId()),
+                cart.getProducts()
+                        .stream()
+                        .map(product -> utils.urlCreator(ProductController.class, product.getId()))
+                        .collect(Collectors.toList()),
+                utils.urlCreator(CartController.class, cart.getId()));
     }
 }
